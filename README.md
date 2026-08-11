@@ -2,15 +2,35 @@
 
 A Full Stack Operations Portal built with **Node.js**, **Express**, **TypeScript**, **PostgreSQL (Supabase)**, **React**, and **Vite**.
 
-Detailed technical specifications and phase walkthroughs can be found in [`docs/PROJECT_DOCUMENTATION.md`](file:///c:/Users/sasin/OneDrive/Desktop/mini-erp-crm/docs/PROJECT_DOCUMENTATION.md).
+- **GitHub Repository**: [https://github.com/NandakishorNaiR/cRm-ErP-sys.git](https://github.com/NandakishorNaiR/cRm-ErP-sys.git)
+- **Live Frontend URL**: [https://crm-erp-sys.onrender.com](https://crm-erp-sys.onrender.com)
+- **Live Backend URL**: [https://crm-erp-sys-backend.onrender.com](https://crm-erp-sys-backend.onrender.com)
+- **Documentation**: [`docs/PROJECT_DOCUMENTATION.md`](file:///c:/Users/sasin/OneDrive/Desktop/mini-erp-crm/docs/PROJECT_DOCUMENTATION.md)
 
 ---
 
-## Tech Stack
+## Tech Stack & System Architecture
 
-- **Backend**: Node.js, Express.js, TypeScript, PostgreSQL (`pg`), JWT, BcryptJS, Express-Validator
-- **Frontend**: React 18, TypeScript, Vite, React Router DOM, Axios, Lucide Icons, Vanilla CSS
-- **Database**: Supabase PostgreSQL connection pool with transaction isolation (`BEGIN`, `COMMIT`, `ROLLBACK`)
+```
+                      React 18 + TypeScript (Vite)
+                                  │
+                                  ▼
+                        JWT Bearer Token Auth
+                                  │
+                                  ▼
+                         Node.js / Express.js
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          ▼                       ▼                       ▼
+      Customers                Products                Challans
+          │                       │                       │
+          │                       ▼                       │
+          │                Stock Movements ◄──────────────┘
+          │                       │
+          └───────────────────────┼───────────────────────┘
+                                  ▼
+                         Supabase PostgreSQL
+```
 
 ---
 
@@ -32,51 +52,30 @@ Detailed technical specifications and phase walkthroughs can be found in [`docs/
 
 ---
 
-## Project Structure
+## Environment Variables
 
-```
-mini-erp-crm/
-├── backend/
-│   ├── src/
-│   │   ├── config/       # Supabase database pool connection
-│   │   ├── controllers/  # REST API controller handlers
-│   │   ├── middleware/   # Auth JWT & RBAC role guards
-│   │   ├── models/       # PostgreSQL data access layer
-│   │   ├── routes/       # Express router definitions
-│   │   ├── services/     # Transactional business logic
-│   │   ├── utils/        # Challan number generator
-│   │   └── validations/  # Express-validator schemas
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── .env.example
-│   └── server.ts
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # Navbar, Sidebar, Loading, ErrorMessage
-│   │   ├── context/      # AuthContext session provider
-│   │   ├── pages/        # Login, Dashboard, Customers, CustomerDetails, Products, StockMovements, Challans, CreateChallan
-│   │   ├── routes/       # AppRoutes & Protected Route guards
-│   │   ├── services/     # Axios API client
-│   │   ├── types/        # TypeScript interfaces
-│   │   ├── index.css     # Design system styles
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── package.json
-│   ├── vite.config.ts
-│   ├── tsconfig.json
-│   └── .env.example
-│
-├── docs/
-│   └── PROJECT_DOCUMENTATION.md
-├── package.json
-├── README.md
-└── .gitignore
-```
+| Component | Environment Variable Name | Description |
+|---|---|---|
+| Backend | `PORT` | Web server listening port |
+| Backend | `NODE_ENV` | Environment mode (`development` / `production`) |
+| Backend | `DATABASE_URL` | PostgreSQL connection string |
+| Backend | `JWT_SECRET` | Secret key for signing JWT auth tokens |
+| Frontend | `VITE_API_URL` | Base API URL pointing to the live backend service |
 
 ---
 
-## Local Development Setup
+## Test Login Credentials
+
+| Role | Email | Password | Access Rights |
+|---|---|---|---|
+| **Admin** | `admin@example.com` | `Password123!` | Full administrative access to all modules |
+| **Sales** | `sales@example.com` | `Password123!` | Customer CRM, Follow-ups, Product catalog view, Sales Challan Creation |
+| **Warehouse** | `warehouse@example.com` | `Password123!` | Product catalog management, Stock IN/OUT Movement logging |
+| **Accounts** | `accounts@example.com` | `Password123!` | View-only access to Customers, Products, Stock Movements, and Challans |
+
+---
+
+## Local Setup
 
 ### 1. Backend Setup
 ```bash
@@ -86,7 +85,6 @@ cp .env.example .env
 # Configure DATABASE_URL and JWT_SECRET in backend/.env
 npm run dev
 ```
-Backend will start on `http://localhost:5000`.
 
 ### 2. Frontend Setup
 ```bash
@@ -96,13 +94,11 @@ cp .env.example .env
 # Set VITE_API_URL=http://localhost:5000/api in frontend/.env
 npm run dev
 ```
-Frontend will start on `http://localhost:3000`.
 
 ---
 
-## Testing
+## E2E Test Suite Execution
 
-Run automated end-to-end integration test suite:
 ```bash
 cd backend
 node C:\Users\sasin\.gemini\antigravity-ide\brain\5962498e-08e9-487c-b988-2a61d8a0550c\scratch\test_phase8_e2e.js
@@ -110,15 +106,15 @@ node C:\Users\sasin\.gemini\antigravity-ide\brain\5962498e-08e9-487c-b988-2a61d8
 
 ---
 
-## Deployment (Render)
+## Deployment Configuration (Render)
 
-### Backend Web Service
+### Backend Service (`crm-erp-sys-backend`)
 - **Root Directory**: `backend`
 - **Environment**: `Node`
 - **Build Command**: `npm install && npm run build`
 - **Start Command**: `npm start`
-- **Environment Variables**:
-  - `PORT`: `5000`
-  - `NODE_ENV`: `production`
-  - `DATABASE_URL`: `<Supabase connection string>`
-  - `JWT_SECRET`: `<Production JWT secret>`
+
+### Frontend Service (`crm-erp-sys`)
+- **Root Directory**: `frontend`
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`

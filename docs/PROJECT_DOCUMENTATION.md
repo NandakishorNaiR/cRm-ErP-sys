@@ -1041,6 +1041,107 @@ Prepare the entire Mini ERP + CRM repository for cloud deployment on Render and 
 
 Completed.
 
+---
+
+# Phase 10 — Production Deployment & System Summary
+
+## Project Overview & Repository
+
+- **GitHub Repository**: [https://github.com/NandakishorNaiR/cRm-ErP-sys.git](https://github.com/NandakishorNaiR/cRm-ErP-sys.git)
+- **Live Frontend URL**: [https://crm-erp-sys.onrender.com](https://crm-erp-sys.onrender.com)
+- **Live Backend URL**: [https://crm-erp-sys-backend.onrender.com](https://crm-erp-sys-backend.onrender.com)
+- **Database Used**: Supabase PostgreSQL
+
+## Architecture Summary
+
+```
+                      React 18 + TypeScript (Vite)
+                                  │
+                                  ▼
+                        JWT Bearer Token Auth
+                                  │
+                                  ▼
+                         Node.js / Express.js
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          ▼                       ▼                       ▼
+      Customers                Products                Challans
+          │                       │                       │
+          │                       ▼                       │
+          │                Stock Movements ◄──────────────┘
+          │                       │
+          └───────────────────────┼───────────────────────┘
+                                  ▼
+                         Supabase PostgreSQL
+```
+
+- **Backend Architecture**: Layered architecture separated into Controllers, Services, Models, Routes, Validations, and Middleware.
+- **Frontend Architecture**: SPA with AuthContext session provider, Role-Based Route Guards, Axios API Client with interceptors, and custom Vanilla CSS design system.
+- **Database Architecture**: Supabase PostgreSQL pool with transaction isolation (`BEGIN`, `COMMIT`, `ROLLBACK`) for stock verification and stock movement logging.
+
+## Deployment Configuration
+
+### 1. Backend Web Service (Render)
+- **Service Name**: `crm-erp-sys-backend`
+- **Root Directory**: `backend`
+- **Environment**: `Node`
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+- **Host Binding**: `0.0.0.0`
+
+### 2. Frontend Web Service (Render)
+- **Service Name**: `crm-erp-sys`
+- **Root Directory**: `frontend`
+- **Environment**: `Static Site` / `Node`
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`
+
+## Environment Variable Names
+
+| Component | Environment Variable Name | Description |
+|---|---|---|
+| Backend | `PORT` | Web server listening port |
+| Backend | `NODE_ENV` | Environment mode (`development` / `production`) |
+| Backend | `DATABASE_URL` | PostgreSQL connection string |
+| Backend | `JWT_SECRET` | Secret key for signing JWT auth tokens |
+| Frontend | `VITE_API_URL` | Base API URL pointing to the live backend service |
+
+> [!NOTE]
+> Database connection credentials and secret keys are stored securely in Render environment settings and are never committed to Git.
+
+## Test Login Credentials
+
+| Role | Email | Password | Access Rights |
+|---|---|---|---|
+| **Admin** | `admin@example.com` | `Password123!` | Full administrative access to all modules and write operations |
+| **Sales** | `sales@example.com` | `Password123!` | Customers CRM, Follow-up Notes, Product catalog view, Sales Challan Creation & Confirmation |
+| **Warehouse** | `warehouse@example.com` | `Password123!` | Product catalog management, Stock IN/OUT Movement logging, Sales Challan view |
+| **Accounts** | `accounts@example.com` | `Password123!` | View-only access to Customers, Products, Stock Movements, and Sales Challans |
+
+## Final E2E Integration Test Results
+
+- **Automated Integration Test Suite (`test_phase8_e2e.js`)**: **29/29 Passed (0 Failures)**
+  - Health Check Endpoint: Passed (HTTP 200 OK)
+  - JWT Authentication for all 4 roles: Passed
+  - Role-Based Access Guards (HTTP 401 & 403 enforcement): Passed
+  - Customer CRM Lifecycle (Create, Search, Edit, Detail, Follow-up notes): Passed
+  - Product Inventory Lifecycle (Create, Edit, Stock IN, Stock OUT, Insufficient Stock 400 rejection): Passed
+  - Sales Challan Lifecycle (Draft creation with stock unchanged, Multi-product atomic stock verification failure check with zero partial stock reduction, Confirmed creation with stock reduction, Status update, Cancellation with stock restoration, Product snapshot persistence): Passed
+
+## Known Limitations & Design Decisions
+
+1. **Strict Assignment Scope**:
+   - Features not explicitly requested in the case study—such as user registration, forgot password, OTP, email verification, customer invoices, customer payments, and PDF exports—were deliberately excluded to align strictly with requirements.
+2. **Sequential Challan Numbering**:
+   - Challan numbers are auto-generated as `CHN-YYYY-XXXX`. Concurrent high-volume creations are serialized via database sequence queries.
+3. **Session Lifespan**:
+   - Bearer JWT tokens expire after 24 hours without automatic background refresh tokens by design requirement.
+
+## Phase Status
+
+Completed.
+
+
 
 
 
