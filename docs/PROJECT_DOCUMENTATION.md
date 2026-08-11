@@ -1033,9 +1033,14 @@ Prepare the entire Mini ERP + CRM repository for cloud deployment on Render and 
      - `DATABASE_URL`: `postgresql://postgres:wh5%26h%24.Z%3Fr.QtKb@db.sexqhuigglrfakthbrgn.supabase.co:5432/postgres`
      - `JWT_SECRET`: `super_secret_jwt_key_mini_erp_crm_2026`
 
+7. **Render Host Binding (`server.ts`)**:
+   - Updated `app.listen(Number(PORT), "0.0.0.0")` in `backend/src/server.ts` to ensure explicit public host binding required by Render Web Services.
+   - Pushed commit `fix: bind backend server for production deployment` to GitHub `main` branch.
+
 ## Phase Status
 
 Completed.
+
 
 
 
