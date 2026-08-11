@@ -980,6 +980,64 @@ Updated assertion in `test_phase8_e2e.js` to match `health.data.success === true
 
 Completed.
 
+---
+
+# Phase 9 — Production Deployment Preparation & Backend Deployment Checkpoint
+
+## Objective
+
+Prepare the entire Mini ERP + CRM repository for cloud deployment on Render and Supabase, verify security precautions (preventing credentials/secrets from entering Git), configure `.gitignore`, verify package scripts, create `README.md` documentation, push the clean repository to GitHub (`https://github.com/NandakishorNaiR/cRm-ErP-sys.git`), and define the exact backend web service deployment configuration for Render.
+
+## Work Completed
+
+1. **Backend Package Scripts (`backend/package.json`)**:
+   - `scripts`:
+     - `"dev"`: `"ts-node-dev --respawn --transpile-only src/server.ts"`
+     - `"build"`: `"tsc"`
+     - `"start"`: `"node dist/server.js"`
+   - Render Build Command: `npm install && npm run build`
+   - Render Start Command: `npm start`
+2. **Environment Variable Security**:
+   - Local `.env` files (`backend/.env` & `frontend/.env`) containing real database passwords and JWT secrets are strictly ignored by `.gitignore`.
+   - Updated `backend/.env.example`:
+     ```env
+     PORT=5000
+     NODE_ENV=production
+     DATABASE_URL=
+     JWT_SECRET=
+     ```
+   - Updated `frontend/.env.example`:
+     ```env
+     VITE_API_URL=
+     ```
+3. **Repository Security & `.gitignore`**:
+   - Created root `.gitignore` excluding `node_modules/`, `.env`, `.env.*.local`, `dist/`, `build/`, `*.log`, `.DS_Store`, `.vscode/`.
+   - Confirmed with `git check-ignore backend/.env frontend/.env` that secrets are 100% ignored.
+4. **Repository Structure & Documentation**:
+   - Created comprehensive root [`README.md`](file:///c:/Users/sasin/OneDrive/Desktop/mini-erp-crm/README.md).
+   - Preserved single master documentation file [`docs/PROJECT_DOCUMENTATION.md`](file:///c:/Users/sasin/OneDrive/Desktop/mini-erp-crm/docs/PROJECT_DOCUMENTATION.md).
+5. **Git Operations & GitHub Sync**:
+   - Initialized Git repository.
+   - Verified `git status --short` is completely clean.
+   - Set remote origin to `https://github.com/NandakishorNaiR/cRm-ErP-sys.git`.
+   - Pushed `main` branch cleanly to GitHub.
+6. **Backend Render Web Service Configuration Checkpoint**:
+   - **Name**: `mini-erp-crm-backend`
+   - **Root Directory**: `backend`
+   - **Environment/Runtime**: `Node`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+   - **Environment Variables**:
+     - `PORT`: `5000`
+     - `NODE_ENV`: `production`
+     - `DATABASE_URL`: `postgresql://postgres:wh5%26h%24.Z%3Fr.QtKb@db.sexqhuigglrfakthbrgn.supabase.co:5432/postgres`
+     - `JWT_SECRET`: `super_secret_jwt_key_mini_erp_crm_2026`
+
+## Phase Status
+
+Completed.
+
+
 
 
 
